@@ -114,3 +114,41 @@ dataA1Soln = [u + [v,w,x,y,z]  for u,v,w,x,y,z in zip(filteredData,subTrajGrper,
 pairedA1 = list(pairwise(dataA1Soln))
 dataA1Soln = [list(map(mul, rows[0], [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1])) if(rows[1]!= None and rows[0][12] != rows[1][12]) else rows[0] for rows in pairedA1]
 
+##### Creating sub trajectories #####
+
+# We are filtering the data to contain only the useful columns for calculating A2 and A3
+list1 = [0,1,2,12,13,14,15,16]
+dataImp = [[each_list[i] for i in list1] for each_list in dataA1Soln]
+
+# Grouping the data for A2
+dataSubTrajectory = [list(items) for _, items in groupby(dataImp, itemgetter(0,1,2,3))]
+
+# Filtering the subtrajectories which have points less than 10 
+dataFiltSubTrj = [grp for grp in dataSubTrajectory if(len(grp)>10)]
+
+
+# A method for calculating all the statistical values asked in A2
+def stats_Calculator(data):        
+        mini = np.min(data)
+        maxi = np.max(data)
+        mean = np.mean(data)
+        median = np.median(data)
+        std = np.std(data)
+        return [mini, maxi, mean, median,std]
+
+
+# Calculating all the statistical values for A2. Here we calculate the minimum, maximum, mean and median
+# for every subtrajectory.
+A2Traj = []
+for grp in dataFiltSubTrj: 
+        count+=1
+        statsDistance = stats_Calculator([distanceRow[4] for distanceRow in grp])
+        statsSpeed = stats_Calculator([speedRow[5] for speedRow in grp])
+        statsAcceleration = stats_Calculator([accRow[6] for accRow in grp])
+        statsBearing = stats_Calculator([bearRow[7] for bearRow in grp])
+      
+        x1 = [grp[0][0], grp[0][1], grp[0][2], grp[0][3]]
+        A2Traj.append(x1+statsDistance+statsSpeed+statsAcceleration+statsBearing)
+
+
+
