@@ -151,4 +151,48 @@ for grp in dataFiltSubTrj:
         A2Traj.append(x1+statsDistance+statsSpeed+statsAcceleration+statsBearing)
 
 
+# Filtering the subrajectories of motorcycle and run
+A2FiltTraj = [trj for trj in A2Traj if(trj[1]!='motorcycle' and trj[1]!='run') ]
 
+# Filtering the data so as to keep only those columns which will be useful for analysing the feature values by class. 
+list2 = [0,1,2,3,6,11,16,21]
+A2FiltTrajF = [[each_list2[i] for i in list2] for each_list2 in A2FiltTraj]
+
+# Convert the filtered data into pandas DataFrame as it has a very optimized groupby function
+output = pd.DataFrame(A2FiltTrajF,columns = ['t_user_id', 'transportation_mode', 'date_Start', 'Flag' 
+                               , 'meanDis', 'meanSpeed', 'meanAcc', 'meanBrng'])
+
+# Grouping by the mode so as to analyse the silimarities and disimilarities between classes 
+outgrp = output.groupby(['transportation_mode'])
+
+# Computing the mean per class for the 4 feature values i.e distance, speed, acceleration and bearing.
+dicPerType = {}
+for grpType in outgrp:
+    label = grpType[0]
+    grp = grpType[1]
+    data= []
+    data.append(np.mean(grp['meanDis']))
+    data.append(np.mean(grp['meanSpeed']))
+    data.append(np.mean(grp['meanAcc']))
+    data.append(np.mean(grp['meanBrng']))
+    dicPerType[label] = data
+    
+# Plotting analysis using bar plot
+count = 0
+features = [0, 1, 2, 3]
+keys = ['mean distance', 'mean speed', 'mean acceleration', 'mean bearing']
+xLabels = ['bus', 'car', 'subway', 'taxi', 'train', 'walk']
+for subset in range(4):
+        plt.subplot(int(str(22) +''+ str(count+1)))
+        x = range(6)
+        print(dicPerType['bus'][subset], dicPerType['car'][subset], dicPerType['subway'][subset], 
+             dicPerType['taxi'][subset], dicPerType['train'][subset], dicPerType['walk'][subset])
+        width = 1/1.5
+        plt.bar(x, list([dicPerType['bus'][subset], dicPerType['car'][subset], dicPerType['subway'][subset], 
+             dicPerType['taxi'][subset], dicPerType['train'][subset], dicPerType['walk'][subset]]), width, color="blue")
+        plt.xlabel('6 Classes')
+        plt.ylabel(keys[count])
+        plt.xticks(range(len(xLabels)), xLabels, size='small')
+        plt.subplots_adjust( hspace= 0.5 )
+        count+=1
+plt.show()
