@@ -196,3 +196,52 @@ for subset in range(4):
         plt.subplots_adjust( hspace= 0.5 )
         count+=1
 plt.show()
+
+# Cleaning data by removing unimportant columns and creating a DataFrame for classification process. 
+
+dataSubTrajectories = pd.DataFrame(A2FiltTraj, columns = ['t_user_id', 'transportation_mode', 'date_Start', 'flag' 
+                               , 'minDis' ,'maxDis', 'meanDis', 'medianDis', 'stdDis'
+                               , 'minSpeed' ,'maxSpeed', 'meanSpeed', 'medianSpeed', 'stdSpeed'
+                               , 'minAcc' ,'maxAcc', 'meanAcc', 'medianAcc', 'stdAcc'
+                              , 'minBrng' ,'maxBrng', 'meanBrng', 'medianBrng', 'stdBrng']  )
+
+#dataSubTrajectories = pd.read_csv('dataFinal_A1.txt', delimiter = '\t')
+dataSubTrajectories = dataSubTrajectories.drop('t_user_id', axis =1)
+dataSubTrajectories = dataSubTrajectories.drop('date_Start', axis =1)
+dataSubTrajectories = dataSubTrajectories.drop('flag', axis =1)
+
+# This is the relabling method which is used in the hierarchical structure
+# Coded on the bases of Q1 of this section
+def relabel(node, labels):
+    lb = []
+    if(node == 1):
+        for value in labels:
+            if(value=='train'):
+                lb.append(100)
+            else:
+                lb.append(-100)    
+    elif(node == 2):
+        for value in labels:
+            if(value=='subway'):
+                lb.append(-80)
+            else:
+                lb.append(80)
+    elif(node == 3):
+        for value in labels:
+            if(value=='walk'):
+                lb.append(-60)
+            else:
+                lb.append(60)
+    elif(node == 4):
+        for value in labels:
+            if(value=='car'):
+                lb.append(-40)
+            else:
+                lb.append(40)
+    elif(node == 5):
+        for value in labels:
+            if(value=='taxi'):
+                lb.append(-20)
+            else:
+                lb.append(20)
+    return lb                
