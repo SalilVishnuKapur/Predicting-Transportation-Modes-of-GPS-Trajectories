@@ -416,4 +416,46 @@ def predictHierarchy(testData, modelDic):
             predLabels.append('taxi')
         elif(i==20):
             predLabels.append('bus')
-    return (predLabels)                
+    return (predLabels)
+
+modelDic = {}
+trainData = dataSubTrajectories.iloc[0:4708,1:21]
+trainLabels  = dataSubTrajectories.iloc[0:4708,0]
+testData = dataSubTrajectories.iloc[4708:5885,1:21]
+testLabels  = dataSubTrajectories.iloc[4708:5885,0]
+
+result = fitHierarchyRFC(trainData, trainLabels, modelDic)
+predLabels = predictHierarchy(testData, result)
+target_names = ['train', 'subway', 'walk', 'car', 'taxi', 'bus' ]
+print("CLASSIFICATION REPORT :- ")
+print(classification_report(testLabels, predLabels, target_names=target_names))
+print("ACCURACY OF COMPLETE HIERARCHY :- ")
+print(accuracy_score(testLabels, predLabels))
+
+rfc = RandomForestClassifier()
+rfc.fit(trainData, trainLabels)
+predFlatRFC = rfc.predict(testData)
+target_names = ['train', 'subway', 'walk', 'car', 'taxi', 'bus' ]
+print("CLASSIFICATION REPORT :- ")
+print(classification_report(testLabels, predFlatRFC, target_names=target_names))
+print("ACCURACY OF COMPLETE FLAT STRUCTURE :- ")
+print(accuracy_score(testLabels, predFlatRFC))
+
+result = fitHierarchyDTC(trainData, trainLabels, modelDic)
+predLabels = predictHierarchy(testData, result)
+target_names = ['train', 'subway', 'walk', 'car', 'taxi', 'bus' ]
+print("CLASSIFICATION REPORT :- ")
+print(classification_report(testLabels, predLabels, target_names=target_names))
+print("ACCURACY OF COMPLETE HIERARCHY :- ")
+print(accuracy_score(testLabels, predLabels))
+
+dtc = DecisionTreeClassifier()
+dtc.fit(trainData, trainLabels)
+predFlatDTC = dtc.predict(testData)
+target_names = ['train', 'subway', 'walk', 'car', 'taxi', 'bus' ]
+print("CLASSIFICATION REPORT :- ")
+print(classification_report(testLabels, predFlatDTC, target_names=target_names))
+print("ACCURACY OF COMPLETE FLAT STRUCTURE :- ")
+print(accuracy_score(testLabels, predFlatDTC))
+
+           
