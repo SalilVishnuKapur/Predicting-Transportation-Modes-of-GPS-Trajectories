@@ -526,4 +526,172 @@ def cvStratified(trainDataset, trainLabelset,typeOfClassification):
                 predFlatDTC = dtc.predict(trainData.iloc[testIndex])
                 cvDtFlat.append(accuracy_score(trainLabels.iloc[testIndex], predFlatDTC))
                 cvDtFlatPerClass.append(classwiseAccuracy(trainLabels.iloc[testIndex], predFlatDTC))
-        return (cvDtFlatPerClass, cvDtFlat)        
+        return (cvDtFlatPerClass, cvDtFlat)
+
+trainData = dataSubTrajectories.iloc[:,1:21]
+trainLabels  = dataSubTrajectories.iloc[:,0]
+
+cvRfHierarchy = cvStratified(trainData, trainLabels, 'RandomForestHierarchy')
+cvDtHierarchy = cvStratified(trainData, trainLabels, 'DecisionTreeHierarchy')
+cvRfFlat = cvStratified(trainData, trainLabels, 'RandomForestFlat')
+cvDtFlat = cvStratified(trainData, trainLabels, 'DecisionTreeFlat')
+
+def transformer(data):
+    c1 = []
+    c2 = []
+    c3 = []
+    c4 = []
+    c5 = []
+    c6 = []
+    for rowDic in data:
+        c1.append(rowDic['bus'])
+        c2.append(rowDic['car'])
+        c3.append(rowDic['subway'])
+        c4.append(rowDic['taxi'])
+        c5.append(rowDic['train'])
+        c6.append(rowDic['walk'])
+    return [c1, c2, c3,c4, c5,c6]   
+    
+    
+cvRfHierarchyT = transformer(cvRfHierarchy[0])
+cvDtHierarchyT = transformer(cvDtHierarchy[0])
+cvRfFlatT = transformer(cvRfFlat[0])
+cvDtFlatT = transformer(cvDtFlat[0])
+
+from scipy.stats import ttest_ind, ttest_ind_from_stats
+
+t_1, p_1 =ttest_ind(cvRfHierarchy[1], cvRfFlat[1], equal_var = False)
+print('Comparing Random Forest classifier on hierarchical structure with Random Forest on a Flat Structure')
+print('p value from t test for this is {}'.format(p_1))
+if p_1 > 0.05:
+    print('=> Samples are likely drawn from the same distributions ')
+else:
+    print('=> Samples are likely drawn from different distributions ')
+print()
+
+t_2, p_2 =ttest_ind(cvDtHierarchy[1], cvDtFlat[1], equal_var = False)
+print('Comparing Decision Tree classifier on hierarchical structure with Decision Tree on a Flat Structure')
+print('p value from t test for this is {}'.format(p_2))
+if p_2 > 0.05:
+    print('=> Samples are likely drawn from the same distributions ')
+else:
+    print('=> Samples are likely drawn from different distributions ')
+print()
+
+from scipy.stats import ttest_ind, ttest_ind_from_stats
+
+t_1, p_1 =ttest_ind(cvRfHierarchyT[0], cvRfFlatT[0], equal_var = False)
+print('Bus Class Comparing Random Forest classifier on hierarchical structure with Random Forest on a Flat Structure')
+print('p value from t test for this is {}'.format(p_1))
+if p_1 > 0.05:
+    print('=> Bus samples are likely drawn from the same distributions ')
+else:
+    print('=> Bus samples are likely drawn from different distributions ')
+print()
+
+t_2, p_2 =ttest_ind(cvRfHierarchyT[1], cvRfFlatT[1], equal_var = False)
+print('Car Class Comparing Random Forest classifier on hierarchical structure with Random Forest on a Flat Structure')
+print('p value from t test for this is {}'.format(p_2))
+if p_2 > 0.05:
+    print('=> Car samples are likely drawn from the same distributions ')
+else:
+    print('=> Car samples are likely drawn from different distributions ')
+print()
+
+t_3, p_3 =ttest_ind(cvRfHierarchyT[2], cvRfFlatT[2], equal_var = False)
+print('Subway Class Comparing Random Forest classifier on hierarchical structure with Random Forest on a Flat Structure')
+print('p value from t test for this is {}'.format(p_3))
+if p_3 > 0.05:
+    print('=> Subway samples are likely drawn from the same distributions ')
+else:
+    print('=> Subway samples are likely drawn from different distributions ')
+print()
+
+t_4, p_4 =ttest_ind(cvRfHierarchyT[3], cvRfFlatT[3], equal_var = False)
+print('Taxi class Comparing Random Forest classifier on hierarchical structure with Random Forest on a Flat Structure')
+print('p value from t test for this is {}'.format(p_4))
+if p_4 > 0.05:
+    print('=> Taxi samples are likely drawn from the same distributions ')
+else:
+    print('=> Taxi samples are likely drawn from different distributions ')
+print()
+
+t_5, p_5 =ttest_ind(cvRfHierarchyT[4], cvRfFlatT[4], equal_var = False)
+print('Train class Comparing Random Forest classifier on hierarchical structure with Random Forest on a Flat Structure')
+print('p value from t test for this is {}'.format(p_5))
+if p_5 > 0.05:
+    print('=> Train samples are likely drawn from the same distributions ')
+else:
+    print('=> Train samples are likely drawn from different distributions ')
+print()
+
+t_6, p_6 =ttest_ind(cvRfHierarchyT[5], cvRfFlatT[5], equal_var = False)
+print('Walk class Comparing Random Forest classifier on hierarchical structure with Random Forest on a Flat Structure')
+print('p value from t test for this is {}'.format(p_6))
+if p_6 > 0.05:
+    print('=> Walk samples are likely drawn from the same distributions ')
+else:
+    print('=> Walk samples are likely drawn from different distributions ')
+print()
+
+
+t_7, p_7 =ttest_ind(cvDtHierarchyT[0], cvDtFlatT[0], equal_var = False)
+print('Bus class Comparing Decision Tree classifier on hierarchical structure with Decision Tree on a Flat Structure')
+print('p value from t test for this is {}'.format(p_7))
+if p_7 > 0.05:
+    print('=> Bus samples are likely drawn from the same distributions ')
+else:
+    print('=> Bus samples are likely drawn from different distributions ')
+print()
+
+
+t_8, p_8 =ttest_ind(cvDtHierarchyT[1], cvDtFlatT[1], equal_var = False)
+print('Car class Comparing Decision Tree classifier on hierarchical structure with Decision Tree on a Flat Structure')
+print('p value from t test for this is {}'.format(p_8))
+if p_8 > 0.05:
+    print('=> Car samples are likely drawn from the same distributions ')
+else:
+    print('=> Car samples are likely drawn from different distributions ')
+print()
+
+
+t_9, p_9 =ttest_ind(cvDtHierarchyT[2], cvDtFlatT[2], equal_var = False)
+print('Subway class Comparing Decision Tree classifier on hierarchical structure with Decision Tree on a Flat Structure')
+print('p value from t test for this is {}'.format(p_9))
+if p_9 > 0.05:
+    print('=> Subway samples are likely drawn from the same distributions ')
+else:
+    print('=> Subway samples are likely drawn from different distributions ')
+print()
+
+
+t_10, p_10 =ttest_ind(cvDtHierarchyT[3], cvDtFlatT[3], equal_var = False)
+print('Taxi class Comparing Decision Tree classifier on hierarchical structure with Decision Tree on a Flat Structure')
+print('p value from t test for this is {}'.format(p_10))
+if p_10 > 0.05:
+    print('=> Taxi samples are likely drawn from the same distributions ')
+else:
+    print('=> Taxi samples are likely drawn from different distributions ')
+print()
+
+
+t_11, p_11 =ttest_ind(cvDtHierarchyT[4], cvDtFlatT[4], equal_var = False)
+print('Train class Comparing Decision Tree classifier on hierarchical structure with Decision Tree on a Flat Structure')
+print('p value from t test for this is {}'.format(p_11))
+if p_11 > 0.05:
+    print('=> Train samples are likely drawn from the same distributions ')
+else:
+    print('=> Train samples are likely drawn from different distributions ')
+print()
+
+
+t_12, p_12 =ttest_ind(cvDtHierarchyT[5], cvDtFlatT[5], equal_var = False)
+print('Walk class Comparing Decision Tree classifier on hierarchical structure with Decision Tree on a Flat Structure')
+print('p value from t test for this is {}'.format(p_12))
+if p_12 > 0.05:
+    print('=> Walk samples are likely drawn from the same distributions ')
+else:
+    print('=> Walk samples are likely drawn from different distributions ')
+print()
+
+        
