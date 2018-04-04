@@ -159,7 +159,29 @@ list2 = [0,1,2,3,6,11,16,21]
 A2FiltTrajF = [[each_list2[i] for i in list2] for each_list2 in A2FiltTraj]
 
 # Convert the filtered data into pandas DataFrame as it has a very optimized groupby function
-output = pd.DataFrame(A2FiltTrajF,columns = ['t_user_id', 'transportation_mode', 'date_Start', 'Flag' 
+omes = ('Bus', 'Car ' , 'Subway', 'Taxi', 'Train', 'Walk')
+arrRfH = [np.mean(cvRfHierarchyT[0]), np.mean(cvRfHierarchyT[1]), np.mean(cvRfHierarchyT[2]), np.mean(cvRfHierarchyT[3]), np.mean(cvRfHierarchyT[4]), np.mean(cvRfHierarchyT[5])] 
+arrRfF =  [np.mean(cvRfFlatT[0]), np.mean(cvRfFlatT[1]), np.mean(cvRfFlatT[2]), np.mean(cvRfFlatT[3]), np.mean(cvRfFlatT[4]), np.mean(cvRfFlatT[5]) ]
+
+
+N = 6
+
+locx = np.arange(6)  # the x locations for the groups
+width = 0.15       # the width of the bars
+
+fig, ax = plt.subplots()
+rects1 = ax.bar(locx, arrRfH, width, color='r' )
+rects2 = ax.bar(locx + width, arrRfF, width, color='y')
+
+ax.set_ylabel('Accuracy Values')
+ax.set_title('Class wise RF comparison among Hierarchy and Flat')
+ax.set_xticks(locx + width / 2)
+ax.set_xticklabels(model_names)
+ax.set_yticks(np.arange(0, 1.04, 0.05))
+ax.legend((rects1[0], rects2[0]), ('Hierarchy Structure', 'Flat Structure'))
+
+
+plt.show()utput = pd.DataFrame(A2FiltTrajF,columns = ['t_user_id', 'transportation_mode', 'date_Start', 'Flag' 
                                , 'meanDis', 'meanSpeed', 'meanAcc', 'meanBrng'])
 
 # Grouping by the mode so as to analyse the silimarities and disimilarities between classes 
@@ -694,4 +716,52 @@ else:
     print('=> Walk samples are likely drawn from different distributions ')
 print()
 
-        
+#Random Forest Classwise comparison
+model_names = ('Bus', 'Car ' , 'Subway', 'Taxi', 'Train', 'Walk')
+arrRfH = [np.mean(cvRfHierarchyT[0]), np.mean(cvRfHierarchyT[1]), np.mean(cvRfHierarchyT[2]), np.mean(cvRfHierarchyT[3]), np.mean(cvRfHierarchyT[4]), np.mean(cvRfHierarchyT[5])] 
+arrRfF =  [np.mean(cvRfFlatT[0]), np.mean(cvRfFlatT[1]), np.mean(cvRfFlatT[2]), np.mean(cvRfFlatT[3]), np.mean(cvRfFlatT[4]), np.mean(cvRfFlatT[5]) ]
+
+
+N = 6
+
+locx = np.arange(6)  # the x locations for the groups
+width = 0.15       # the width of the bars
+
+fig, ax = plt.subplots()
+rects1 = ax.bar(locx, arrRfH, width, color='r' )
+rects2 = ax.bar(locx + width, arrRfF, width, color='y')
+
+ax.set_ylabel('Accuracy Values')
+ax.set_title('Class wise RF comparison among Hierarchy and Flat')
+ax.set_xticks(locx + width / 2)
+ax.set_xticklabels(model_names)
+ax.set_yticks(np.arange(0, 1.04, 0.05))
+ax.legend((rects1[0], rects2[0]), ('Hierarchy Structure', 'Flat Structure'))
+
+
+plt.show()
+
+#Decision Tree Classwise comparison
+
+model_names = ('Bus', 'Car ' , 'Subway', 'Taxi', 'Train', 'Walk')
+arrDtH = [np.mean(cvDtHierarchyT[0]), np.mean(cvDtHierarchyT[1]), np.mean(cvDtHierarchyT[2]), np.mean(cvDtHierarchyT[3]), np.mean(cvDtHierarchyT[4]), np.mean(cvDtHierarchyT[5])] 
+arrDtF =  [np.mean(cvDtFlatT[0]), np.mean(cvDtFlatT[1]), np.mean(cvDtFlatT[2]), np.mean(cvDtFlatT[3]), np.mean(cvDtFlatT[4]), np.mean(cvDtFlatT[5]) ]
+
+N = 6
+
+locx = np.arange(6)  # the x locations for the groups
+width = 0.15       # the width of the bars
+
+fig, ax = plt.subplots()
+rects1 = ax.bar(locx, arrDtH, width, color='r' )
+rects2 = ax.bar(locx + width, arrDtF, width, color='y')
+
+ax.set_ylabel('Accuracy Values')
+ax.set_title('Class wise DT comparison among Hierarchy and Flat')
+ax.set_xticks(locx + width / 2)
+ax.set_xticklabels(model_names)
+ax.set_yticks(np.arange(0, 1.04, 0.05))
+ax.legend((rects1[0], rects2[0]), ('Hierarchy Structure', 'Flat Structure'))
+
+
+plt.show()
