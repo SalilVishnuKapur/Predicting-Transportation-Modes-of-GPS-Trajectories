@@ -1,9 +1,16 @@
-
-
-
+import math
+import itertools
+import numpy as np
 
 class Utils:
-
+    '''
+    Creating a column for creating DataFrame
+    '''
+    columns = ['t_user_id', 'transportation_mode', 'date_Start', 'flag'
+        , 'minDis', 'maxDis', 'meanDis', 'medianDis', 'stdDis'
+        , 'minSpeed', 'maxSpeed', 'meanSpeed', 'medianSpeed', 'stdSpeed'
+        , 'minAcc', 'maxAcc', 'meanAcc', 'medianAcc', 'stdAcc'
+        , 'minBrng', 'maxBrng', 'meanBrng', 'medianBrng', 'stdBrng']
     # This is the method to calculate bearing between two points on the bases
     # of latitute and longitutes of the 2 points.
     def bearing_Calculator(row):
@@ -24,5 +31,63 @@ class Utils:
     def pairwise(iterable):
         a, b = itertools.tee(iterable)
         next(b, None)
+        return itertools.zip_longest(a, b)
 
-    return itertools.zip_longest(a, b)
+    # A method for calculating all the statistical values asked in A2
+    def stats_Calculator(data):
+        mini = np.min(data)
+        maxi = np.max(data)
+        mean = np.mean(data)
+        median = np.median(data)
+        std = np.std(data)
+        return [mini, maxi, mean, median, std]
+
+    def relabel(node, labels):
+        lb = []
+        if (node == 1):
+            for value in labels:
+                if (value == 'train'):
+                    lb.append(100)
+                else:
+                    lb.append(-100)
+        elif (node == 2):
+            for value in labels:
+                if (value == 'subway'):
+                    lb.append(-80)
+                else:
+                    lb.append(80)
+        elif (node == 3):
+            for value in labels:
+                if (value == 'walk'):
+                    lb.append(-60)
+                else:
+                    lb.append(60)
+        elif (node == 4):
+            for value in labels:
+                if (value == 'car'):
+                    lb.append(-40)
+                else:
+                    lb.append(40)
+        elif (node == 5):
+            for value in labels:
+                if (value == 'taxi'):
+                    lb.append(-20)
+                else:
+                    lb.append(20)
+        return lb
+
+    def transformer(data):
+        c1 = []
+        c2 = []
+        c3 = []
+        c4 = []
+        c5 = []
+        c6 = []
+        for rowDic in data:
+            c1.append(rowDic['bus'])
+            c2.append(rowDic['car'])
+            c3.append(rowDic['subway'])
+            c4.append(rowDic['taxi'])
+            c5.append(rowDic['train'])
+            c6.append(rowDic['walk'])
+        return [c1, c2, c3, c4, c5, c6]
